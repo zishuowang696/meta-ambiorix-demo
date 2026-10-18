@@ -1,5 +1,7 @@
 # meta-ambiorix-demo
 
+[![yocto](https://github.com/zishuowang696/meta-ambiorix-demo/actions/workflows/yocto.yml/badge.svg)](https://github.com/zishuowang696/meta-ambiorix-demo/actions/workflows/yocto.yml)
+
 A **minimal, reproducible Yocto layer** that runs [Ambiorix (AMX)](https://gitlab.com/prpl-foundation/components/ambiorix) on **scarthgap** in QEMU.
 
 It builds the full AMX library chain, the `amxrt` runtime, the **ubus** backend, and a tiny `Hello` data model served over ubus. A `hello-client` reads it over ubus.

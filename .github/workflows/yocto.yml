@@ -1,0 +1,76 @@
+name: yocto
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'kas.yml'
+      - 'conf/**'
+      - 'classes/**'
+      - 'recipes-**'
+      - '.github/workflows/yocto.yml'
+
+concurrency:
+  group: yocto-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 350
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@v10
+        with:
+          root-reserve-mb: 4096
+          temp-reserve-mb: 2048
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+
+      - uses: actions/checkout@v4
+
+      - name: Install kas and Yocto dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gawk wget git diffstat unzip texinfo gcc build-essential \
+            chrpath socat cpio python3 python3-pip python3-pexpect \
+            xz-utils debianutils iputils-ping python3-git python3-jinja2 \
+            python3-subunit zstd liblz4-tool file locales libacl1
+          python3 -m pip install --user kas
+
+      - name: Cache downloads and sstate
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/downloads
+            build/sstate-cache
+          key: yocto-${{ runner.os }}-${{ hashFiles('kas.yml', 'recipes-*/**', 'classes/**', 'conf/**') }}
+          restore-keys: |
+            yocto-${{ runner.os }}-
+
+      - name: kas build
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          kas build kas.yml
+
+      - name: Check AMX packages in the image
+        run: |
+          manifest="$(find build/tmp/deploy/images/qemuarm64 -name 'core-image-minimal-qemuarm64.manifest' | head -1)"
+          test -n "$manifest"
+          for pkg in amxrt hello hello-client mod-amxb-ubus ubusd-systemd; do
+            grep -q "^${pkg}$" "$manifest" || { echo "missing package: ${pkg}"; exit 1; }
+          done
+          grep -E '^(amxrt|hello|hello-client|mod-amxb-ubus|ubusd-systemd)$' "$manifest"
+
+      - name: Upload image
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-image-minimal-qemuarm64
+          path: build/tmp/deploy/images/qemuarm64/core-image-minimal-qemuarm64*
+          if-no-files-found: warn
