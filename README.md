@@ -18,7 +18,7 @@ It builds the full AMX library chain, the `amxrt` runtime, the **ubus** backend,
 Requirements: `git`, `kas`, network access, ~50 GB free disk, 8+ GB RAM.
 
 ```bash
-git clone <this-repo> meta-ambiorix-demo
+git clone https://github.com/zishuowang696/meta-ambiorix-demo.git
 cd meta-ambiorix-demo
 
 kas build kas.yml
