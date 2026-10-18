@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1ede30d..c91d750 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,7 +59,9 @@ ADD_EXECUTABLE(cli cli.c)
+ SET_TARGET_PROPERTIES(cli PROPERTIES OUTPUT_NAME ubus)
+ TARGET_LINK_LIBRARIES(cli ubus ${ubox_library} ${blob_library} ${json})
+ 
+-ADD_SUBDIRECTORY(lua)
++IF(BUILD_LUA)
++	ADD_SUBDIRECTORY(lua)
++ENDIF()
+ ADD_SUBDIRECTORY(examples)
+ 
+ IF(UNIT_TESTING)

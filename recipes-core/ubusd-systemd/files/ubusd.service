@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenWrt ubus daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/ubusd
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

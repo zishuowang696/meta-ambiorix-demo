@@ -1,0 +1,10 @@
+%config {
+    name = "hello";
+}
+
+%define {
+    object Hello {
+        string Greeting = "Hello, AMX";
+        uint32 Count = 0;
+    }
+}

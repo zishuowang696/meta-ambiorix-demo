@@ -1,0 +1,12 @@
+[Unit]
+Description=AMX hello data model
+After=ubusd.service
+Requires=ubusd.service
+
+[Service]
+ExecStart=/usr/bin/amxrt -u ubus:/var/run/ubus/ubus.sock -B /usr/bin/mods/amxb/mod-amxb-ubus.so /etc/amx/hello/hello.odl
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+build/
+downloads/
+sstate-cache/
+tmp/
+*.pyc
+.kas/
+
+poky/
+meta-openembedded/

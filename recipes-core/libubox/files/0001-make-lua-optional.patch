@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bb67fec..956cd69 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,7 +45,9 @@ INSTALL(TARGETS ubox ubox-static
+ 	LIBRARY DESTINATION lib
+ )
+ 
+-ADD_SUBDIRECTORY(lua)
++IF(BUILD_LUA)
++	ADD_SUBDIRECTORY(lua)
++ENDIF()
+ ADD_SUBDIRECTORY(examples)
+ 
+ MACRO(ADD_UNIT_TEST_SAN name)

@@ -1,0 +1,32 @@
+header:
+  version: 14
+
+machine: qemuarm64
+distro: poky
+target: core-image-minimal
+
+repos:
+  poky:
+    url: https://git.yoctoproject.org/poky
+    branch: scarthgap
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-openembedded:
+    url: https://git.openembedded.org/meta-openembedded
+    branch: scarthgap
+    layers:
+      meta-oe:
+
+  meta-ambiorix-demo:
+    path: .
+
+local_conf_header:
+  ambiorix-demo: |
+    INIT_MANAGER = "systemd"
+    IMAGE_INSTALL:append = " packagegroup-ambiorix-demo"
+    EXTRA_IMAGE_FEATURES += "ssh-server-openssh"
+    IMAGE_ROOTFS_EXTRA_SPACE = "262144"
+    PACKAGE_CLASSES = "package_ipk"
